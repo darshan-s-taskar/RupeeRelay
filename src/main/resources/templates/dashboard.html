@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UPI Offline Mesh</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f6f7f9;
+            --panel: #ffffff;
+            --ink: #18202a;
+            --muted: #647282;
+            --line: #d9dee6;
+            --green: #168a5b;
+            --blue: #2869d7;
+            --amber: #a96000;
+            --red: #b42318;
+            --shadow: 0 18px 55px rgba(24, 32, 42, 0.09);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            letter-spacing: 0;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            min-height: 42px;
+            padding: 0 14px;
+            font-weight: 700;
+            color: #fff;
+            background: var(--ink);
+        }
+
+        button.secondary {
+            color: var(--ink);
+            background: #e8edf3;
+        }
+
+        button.success {
+            background: var(--green);
+        }
+
+        button.warning {
+            background: var(--amber);
+        }
+
+        button.danger {
+            background: var(--red);
+        }
+
+        input,
+        select {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            min-height: 42px;
+            padding: 8px 10px;
+            color: var(--ink);
+            background: #fff;
+        }
+
+        label {
+            display: grid;
+            gap: 6px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .shell {
+            width: min(1240px, calc(100vw - 32px));
+            margin: 0 auto;
+            padding: 24px 0 42px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mark {
+            display: grid;
+            width: 42px;
+            height: 42px;
+            place-items: center;
+            border-radius: 8px;
+            color: #fff;
+            background: linear-gradient(135deg, #168a5b, #2869d7);
+            font-weight: 900;
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin: 0;
+            line-height: 1.15;
+        }
+
+        h1 {
+            font-size: 26px;
+        }
+
+        h2 {
+            font-size: 18px;
+        }
+
+        h3 {
+            font-size: 15px;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .login-wrap {
+            display: grid;
+            min-height: calc(100vh - 48px);
+            place-items: center;
+        }
+
+        .login-panel {
+            width: min(440px, 100%);
+            padding: 24px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel);
+            box-shadow: var(--shadow);
+        }
+
+        .login-panel form,
+        .payment-form {
+            display: grid;
+            gap: 14px;
+        }
+
+        .demo-users {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--line);
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .grid.two {
+            grid-template-columns: minmax(300px, 0.85fr) minmax(420px, 1.15fr);
+        }
+
+        .grid.three {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .panel {
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel);
+            box-shadow: 0 8px 28px rgba(24, 32, 42, 0.05);
+        }
+
+        .panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .actions {
+            display: grid;
+            gap: 10px;
+        }
+
+        .action-row {
+            display: grid;
+            grid-template-columns: 34px 1fr auto;
+            align-items: center;
+            gap: 12px;
+            min-height: 58px;
+            padding: 10px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fbfcfd;
+        }
+
+        .step {
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            border-radius: 8px;
+            color: #fff;
+            background: var(--blue);
+            font-weight: 900;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        th {
+            color: var(--muted);
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            border-radius: 8px;
+            padding: 3px 9px;
+            font-size: 12px;
+            font-weight: 800;
+            background: #e8edf3;
+            color: var(--ink);
+            white-space: nowrap;
+        }
+
+        .status.SETTLED {
+            background: #dff6eb;
+            color: #116242;
+        }
+
+        .status.DUPLICATE_DROPPED {
+            background: #fff1d6;
+            color: #805000;
+        }
+
+        .status.TAMPERED_REJECTED,
+        .status.STALE_REJECTED,
+        .status.INVALID_PIN_REJECTED,
+        .status.INSUFFICIENT_FUNDS_REJECTED,
+        .status.UNKNOWN_ACCOUNT_REJECTED,
+        .status.INVALID_PAYMENT_REJECTED,
+        .status.ERROR_REJECTED {
+            background: #ffe4e2;
+            color: #912018;
+        }
+
+        .message {
+            display: none;
+            margin: 0 0 16px;
+            border: 1px solid #c8d7ef;
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: #1b4b95;
+            background: #eef5ff;
+            font-weight: 700;
+        }
+
+        .empty {
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        .hash {
+            max-width: 180px;
+            overflow-wrap: anywhere;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 12px;
+        }
+
+        @media (max-width: 980px) {
+            .grid.two,
+            .grid.three {
+                grid-template-columns: 1fr;
+            }
+
+            .action-row {
+                grid-template-columns: 34px 1fr;
+            }
+
+            .action-row button {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .shell {
+                width: min(100vw - 20px, 1240px);
+                padding-top: 12px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<main class="shell">
+    <section id="loginView" class="login-wrap">
+        <div class="login-panel">
+            <div class="brand" style="margin-bottom: 18px;">
+                <div class="mark">UPI</div>
+                <div>
+                    <h1>UPI Offline Mesh</h1>
+                    <div class="muted">Demo dashboard</div>
+                </div>
+            </div>
+            <form id="loginForm">
+                <label>
+                    Username
+                    <select id="username">
+                        <option value="alice">alice</option>
+                        <option value="bob">bob</option>
+                        <option value="bridge">bridge</option>
+                    </select>
+                </label>
+                <label>
+                    Password
+                    <input id="password" type="password" value="1234" autocomplete="current-password">
+                </label>
+                <button type="submit" class="success">Login</button>
+            </form>
+            <div class="demo-users">Demo users: alice / 1234, bob / 1234, bridge / 1234</div>
+        </div>
+    </section>
+
+    <section id="dashboardView" class="dashboard">
+        <header class="topbar">
+            <div class="brand">
+                <div class="mark">UPI</div>
+                <div>
+                    <h1>UPI Offline Mesh</h1>
+                    <div class="muted">Signed packets, mesh hops, bridge upload, exactly-once settlement</div>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span id="sessionUser" class="muted"></span>
+                <button id="logoutButton" class="secondary">Logout</button>
+            </div>
+        </header>
+
+        <div id="message" class="message"></div>
+
+        <div class="grid two">
+            <section class="panel">
+                <div class="panel-head">
+                    <h2>Payment</h2>
+                    <span class="muted">TTL 6</span>
+                </div>
+                <form id="paymentForm" class="payment-form">
+                    <label>
+                        Sender
+                        <select id="sender">
+                            <option value="alice@upi">alice@upi</option>
+                            <option value="bob@upi">bob@upi</option>
+                            <option value="charlie@upi">charlie@upi</option>
+                        </select>
+                    </label>
+                    <label>
+                        Receiver
+                        <select id="receiver">
+                            <option value="bob@upi">bob@upi</option>
+                            <option value="alice@upi">alice@upi</option>
+                            <option value="charlie@upi">charlie@upi</option>
+                        </select>
+                    </label>
+                    <label>
+                        Amount
+                        <input id="amount" type="number" min="1" step="0.01" value="500">
+                    </label>
+                    <label>
+                        PIN
+                        <input id="pin" type="password" inputmode="numeric" value="1234">
+                    </label>
+                    <button type="submit" class="success">Inject into Mesh</button>
+                </form>
+            </section>
+
+            <section class="panel">
+                <div class="panel-head">
+                    <h2>Demo Controls</h2>
+                    <span class="muted">Basement to bridge</span>
+                </div>
+                <div class="actions">
+                    <div class="action-row">
+                        <div class="step">1</div>
+                        <div>
+                            <h3>Compose</h3>
+                            <div class="muted">Encrypt and place packet on phone-alice.</div>
+                        </div>
+                        <button id="injectButton" class="success">Inject into Mesh</button>
+                    </div>
+                    <div class="action-row">
+                        <div class="step">2</div>
+                        <div>
+                            <h3>Gossip</h3>
+                            <div class="muted">Nearby phones exchange held packets.</div>
+                        </div>
+                        <button id="gossipButton">Run Gossip Round</button>
+                    </div>
+                    <div class="action-row">
+                        <div class="step">3</div>
+                        <div>
+                            <h3>Bridge</h3>
+                            <div class="muted">Internet device uploads to backend.</div>
+                        </div>
+                        <button id="bridgeButton">Bridges Upload to Backend</button>
+                    </div>
+                    <div class="action-row">
+                        <div class="step">4</div>
+                        <div>
+                            <h3>Replay</h3>
+                            <div class="muted">Submit the same ciphertext again.</div>
+                        </div>
+                        <button id="replayButton" class="warning">Replay Packet</button>
+                    </div>
+                    <div class="action-row">
+                        <div class="step">5</div>
+                        <div>
+                            <h3>Tamper</h3>
+                            <div class="muted">Flip one encrypted byte before ingest.</div>
+                        </div>
+                        <button id="tamperButton" class="danger">Tamper Packet</button>
+                    </div>
+                    <div class="action-row">
+                        <div class="step">6</div>
+                        <div>
+                            <h3>Stale</h3>
+                            <div class="muted">Upload a packet signed more than 24 hours ago.</div>
+                        </div>
+                        <button id="staleButton" class="danger">Stale Packet</button>
+                    </div>
+                    <div class="action-row">
+                        <div class="step">0</div>
+                        <div>
+                            <h3>Reset</h3>
+                            <div class="muted">Restore balances, ledger, mesh, and claims.</div>
+                        </div>
+                        <button id="resetButton" class="secondary">Reset Mesh</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="grid three" style="margin-top: 16px;">
+            <section class="panel">
+                <div class="panel-head">
+                    <h2>Balances</h2>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Owner</th>
+                        <th>UPI ID</th>
+                        <th>Balance</th>
+                    </tr>
+                    </thead>
+                    <tbody id="accountsBody"></tbody>
+                </table>
+            </section>
+
+            <section class="panel">
+                <div class="panel-head">
+                    <h2>Mesh Devices</h2>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Device</th>
+                        <th>Internet</th>
+                        <th>Packets</th>
+                        <th>TTL</th>
+                    </tr>
+                    </thead>
+                    <tbody id="devicesBody"></tbody>
+                </table>
+            </section>
+
+            <section class="panel">
+                <div class="panel-head">
+                    <h2>Last Ingestion</h2>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Packet Hash</th>
+                    </tr>
+                    </thead>
+                    <tbody id="resultsBody"></tbody>
+                </table>
+            </section>
+        </div>
+
+        <section class="panel" style="margin-top: 16px;">
+            <div class="panel-head">
+                <h2>Transaction Ledger</h2>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Sender</th>
+                    <th>Receiver</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Packet Hash</th>
+                    <th>Settled At</th>
+                </tr>
+                </thead>
+                <tbody id="ledgerBody"></tbody>
+            </table>
+        </section>
+    </section>
+</main>
+
+<script>
+    const loginView = document.getElementById('loginView');
+    const dashboardView = document.getElementById('dashboardView');
+    const messageBox = document.getElementById('message');
+
+    async function request(path, options = {}) {
+        const response = await fetch(path, {
+            method: options.method || 'GET',
+            headers: {'Content-Type': 'application/json'},
+            body: options.body ? JSON.stringify(options.body) : undefined
+        });
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({error: response.statusText}));
+            throw new Error(error.error || response.statusText);
+        }
+        return response.json();
+    }
+
+    function money(value) {
+        return new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            maximumFractionDigits: 2
+        }).format(Number(value || 0));
+    }
+
+    function shortHash(hash) {
+        if (!hash) {
+            return '-';
+        }
+        return hash.length > 18 ? `${hash.slice(0, 10)}...${hash.slice(-6)}` : hash;
+    }
+
+    function statusPill(status) {
+        return `<span class="status ${status}">${status}</span>`;
+    }
+
+    function render(state) {
+        loginView.style.display = state.loggedIn ? 'none' : 'grid';
+        dashboardView.style.display = state.loggedIn ? 'block' : 'none';
+        document.getElementById('sessionUser').textContent = state.user ? `Signed in: ${state.user}` : '';
+
+        if (state.message) {
+            messageBox.textContent = state.message;
+            messageBox.style.display = 'block';
+        }
+
+        renderAccounts(state.accounts || []);
+        renderDevices(state.devices || []);
+        renderResults(state.lastResults || []);
+        renderLedger(state.transactions || []);
+    }
+
+    function renderAccounts(accounts) {
+        document.getElementById('accountsBody').innerHTML = accounts.map(account => `
+            <tr>
+                <td>${account.owner}</td>
+                <td>${account.upiId}</td>
+                <td><strong>${money(account.balance)}</strong></td>
+            </tr>
+        `).join('');
+    }
+
+    function renderDevices(devices) {
+        document.getElementById('devicesBody').innerHTML = devices.map(device => {
+            const ttls = device.packets.length ? device.packets.map(packet => packet.ttl).join(', ') : '-';
+            return `
+                <tr>
+                    <td>${device.deviceId}</td>
+                    <td>${device.hasInternet ? 'Yes' : 'No'}</td>
+                    <td><strong>${device.packetCount}</strong></td>
+                    <td>${ttls}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function renderResults(results) {
+        const body = document.getElementById('resultsBody');
+        if (!results.length) {
+            body.innerHTML = '<tr><td colspan="2" class="empty">No backend ingestion yet</td></tr>';
+            return;
+        }
+        body.innerHTML = results.map(result => `
+            <tr title="${result.detail || ''}">
+                <td>${statusPill(result.status)}</td>
+                <td class="hash">${shortHash(result.packetHash)}</td>
+            </tr>
+        `).join('');
+    }
+
+    function renderLedger(transactions) {
+        const body = document.getElementById('ledgerBody');
+        if (!transactions.length) {
+            body.innerHTML = '<tr><td colspan="7" class="empty">No settled transactions</td></tr>';
+            return;
+        }
+        body.innerHTML = transactions.map(tx => `
+            <tr>
+                <td>${tx.id}</td>
+                <td>${tx.sender}</td>
+                <td>${tx.receiver}</td>
+                <td><strong>${money(tx.amount)}</strong></td>
+                <td>${statusPill(tx.status)}</td>
+                <td class="hash">${shortHash(tx.packetHash)}</td>
+                <td>${new Date(tx.settledAt).toLocaleString()}</td>
+            </tr>
+        `).join('');
+    }
+
+    async function refresh() {
+        render(await request('/api/demo/state'));
+    }
+
+    async function runAction(path, body) {
+        try {
+            render(await request(path, {method: 'POST', body}));
+        } catch (error) {
+            messageBox.textContent = error.message;
+            messageBox.style.display = 'block';
+        }
+    }
+
+    function paymentBody() {
+        return {
+            sender: document.getElementById('sender').value,
+            receiver: document.getElementById('receiver').value,
+            amount: document.getElementById('amount').value,
+            pin: document.getElementById('pin').value
+        };
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async event => {
+        event.preventDefault();
+        await runAction('/api/demo/login', {
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value
+        });
+    });
+
+    document.getElementById('paymentForm').addEventListener('submit', event => {
+        event.preventDefault();
+        runAction('/api/demo/inject', paymentBody());
+    });
+
+    document.getElementById('injectButton').addEventListener('click', () => runAction('/api/demo/inject', paymentBody()));
+    document.getElementById('gossipButton').addEventListener('click', () => runAction('/api/demo/gossip'));
+    document.getElementById('bridgeButton').addEventListener('click', () => runAction('/api/demo/bridge-upload'));
+    document.getElementById('replayButton').addEventListener('click', () => runAction('/api/demo/replay'));
+    document.getElementById('tamperButton').addEventListener('click', () => runAction('/api/demo/tamper'));
+    document.getElementById('staleButton').addEventListener('click', () => runAction('/api/demo/stale'));
+    document.getElementById('resetButton').addEventListener('click', () => runAction('/api/demo/reset'));
+    document.getElementById('logoutButton').addEventListener('click', () => runAction('/api/demo/logout'));
+
+    refresh();
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+# Build output
+target/
+out/
+build/
+bin/
+
+# Compiled Java artifacts
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven local/release files
+dependency-reduced-pom.xml
+release.properties
+
+# Logs
+*.log
+logs/
+spring-boot-run.out.log
+spring-boot-run.err.log
+
+# Local environment files
+.env
+.env.*
+*.local
+application-local.properties
+application-*.local.properties
+
+# H2/local database files
+*.db
+*.mv.db
+*.trace.db
+*.h2.db
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Eclipse / Spring Tool Suite
+.classpath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+
+# Test reports and coverage
+surefire-reports/
+failsafe-reports/
+jacoco.exec
+coverage/
