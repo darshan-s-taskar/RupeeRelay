@@ -452,7 +452,7 @@ java -version
 Open a terminal in the project root:
 
 ```text
-C:\Users\darsh\Desktop\UPI Project\upi-offline-mesh
+C:\Users\UPI Project\upi-offline-mesh
 ```
 
 ### Windows
