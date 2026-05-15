@@ -590,7 +590,7 @@ Password is empty.
 
 ## Key Learning Outcomes
 
-This project demonstrates practical backend concepts useful for product-based company interviews:
+This project demonstrates practical backend concepts useful to understand real engineering aspects:
 
 - Designing secure payment-like workflows
 - Building idempotent APIs
